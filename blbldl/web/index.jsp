@@ -1,7 +1,8 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<!DOCTYPE>
+<html lang="zh">
 <head>
-    <title>BLBLDL</title>
+    <title>B L B L D L</title>
 </head>
 <body>
     <h2>首页</h2>
