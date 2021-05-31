@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="jsp/header.jsp" %>
 <!DOCTYPE>
 <html lang="zh">
 <head>
