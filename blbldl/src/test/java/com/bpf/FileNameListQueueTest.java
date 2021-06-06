@@ -4,12 +4,14 @@ import com.bpf.pojo.FileName;
 import com.bpf.thread.Download;
 import com.bpf.thread.FileNameListQueue;
 import com.bpf.thread.Merge;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
 public class FileNameListQueueTest {
 
-    public static void main(String[] args) {
+    @Test
+    public void test() {
         /**
          * 第一次测试：测试代码的可行性
          */
