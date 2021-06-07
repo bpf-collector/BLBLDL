@@ -29,6 +29,6 @@ public class CourseDaoImpl extends BaseDao implements CourseDao {
     @Override
     public List<Page> queryPagesByBvId(String bvId) {
         String sql = "select * from page where bvId = ? order by pageNo";
-        return queryForList(Page.class, bvId);
+        return queryForList(Page.class, sql, bvId);
     }
 }

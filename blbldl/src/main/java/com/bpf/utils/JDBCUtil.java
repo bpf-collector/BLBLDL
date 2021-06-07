@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class JDBCUtil {
+
+    private JDBCUtil() {}
+
     private static DataSource source = null;
 
     static {

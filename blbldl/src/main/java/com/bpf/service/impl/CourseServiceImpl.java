@@ -78,7 +78,7 @@ public class CourseServiceImpl implements CourseService {
         int videos = Integer.parseInt(String.valueOf(videoData.get("videos")));
         if (courseDao.queryCourseByBvId(bvId) == null) {
             // 课程还未添加
-            courseDao.insertCourse(new Course(aid, bvId, title, videos, ownerId));
+            courseDao.insertCourse(new Course(aid, bvId, title, videos, ownerId, intro));
         }
 
         // 添加视频信息（部分信息）

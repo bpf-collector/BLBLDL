@@ -10,6 +10,8 @@ import java.util.Random;
 
 public class WebUtil {
 
+    private WebUtil() {}
+
     public static final String BASEURL = "http://www.bilibili.com/video/";
 
     private static Properties prop;
