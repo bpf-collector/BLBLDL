@@ -37,7 +37,7 @@ public class PageServiceImpl implements PageService {
             data = html.substring(start + patt1.length(), end);
             data = data.replace("<script>", "").replace("</script>", "").trim();
         } catch (ConnectException e) {
-            System.out.println("getPageInfo 重新连接中...");
+            System.out.println("[PageServiceImpl] getPageInfo 重新连接中...");
             try {
                 Thread.sleep(1500);
             } catch (InterruptedException interruptedException) {

@@ -18,4 +18,9 @@ public class OwnerServiceImpl implements OwnerService {
     public Owner getOwnerByMid(String mid) {
         return ownerDao.queryOwnerByMid(mid);
     }
+
+    @Override
+    public Owner getOwnerById(int id) {
+        return ownerDao.queryOwnerById(id);
+    }
 }

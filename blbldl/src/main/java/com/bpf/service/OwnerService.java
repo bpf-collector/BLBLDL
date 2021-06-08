@@ -8,5 +8,7 @@ public interface OwnerService {
 
     Owner getOwnerByMid(String mid);
 
+    Owner getOwnerById(int id);
+
 
 }

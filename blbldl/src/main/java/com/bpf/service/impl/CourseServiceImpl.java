@@ -19,7 +19,10 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CourseServiceImpl implements CourseService {
 
@@ -106,8 +109,8 @@ public class CourseServiceImpl implements CourseService {
 
         // 更新视频信息
         String sourceUrl = url.split("\\?")[0];
-        for (int i = 0; i <= videos; i++) {
-            System.out.println("[CourseServiceImpl] 更新视频信息" + (i+1));
+        for (int i = 1; i <= videos; i++) {
+            System.out.println("[CourseServiceImpl] 更新视频信息" + i);
             String tUrl = sourceUrl + "?p=" + i;
             try {
                 Map<String, Object> map = pageService.getPageInfoMap(tUrl);
@@ -121,7 +124,15 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course getCourseByBvId(String bvId) {
-        return courseDao.queryCourseByBvId(bvId);
+        Course course = courseDao.queryCourseByBvId(bvId);
+        List<Page> pages = courseDao.queryPagesByBvId(bvId);
+        Map<Integer, Page> map = new HashMap<>();
+        for (Page page: pages) {
+            map.put(page.getPageNo(), page);
+        }
+        course.setPages(map);
+
+        return course;
     }
 
     @Override
