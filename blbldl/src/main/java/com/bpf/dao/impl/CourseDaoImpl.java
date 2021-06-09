@@ -31,4 +31,22 @@ public class CourseDaoImpl extends BaseDao implements CourseDao {
         String sql = "select * from page where bvId = ? order by pageNo";
         return queryForList(Page.class, sql, bvId);
     }
+
+    @Override
+    public List<Course> queryCourseByOwnerId(int ownerId) {
+        String sql = "select aid,bvId,title,videos,intro,ownerId from course where ownerId = ?";
+        return queryForList(Course.class, sql, ownerId);
+    }
+
+    @Override
+    public List<Course> queryAllCourse() {
+        String sql = "select aid,bvId,title,videos,intro,ownerId,saved from course";
+        return queryForList(Course.class, sql);
+    }
+
+    @Override
+    public List<Course> queryCourseLikeTitle(String title) {
+        String sql = "select aid,bvId,title,videos,intro,ownerId,saved from course where title like ?";
+        return queryForList(Course.class, sql, "%"+title+"%");
+    }
 }

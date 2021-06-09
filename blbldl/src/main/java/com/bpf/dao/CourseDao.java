@@ -14,4 +14,10 @@ public interface CourseDao {
     Course queryCourseByBvId(String bvId);
 
     List<Page> queryPagesByBvId(String bvId);
+
+    List<Course> queryCourseByOwnerId(int ownerId);
+
+    List<Course> queryAllCourse();
+
+    List<Course> queryCourseLikeTitle(String title);
 }

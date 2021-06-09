@@ -3,6 +3,8 @@ package com.bpf.dao.impl;
 import com.bpf.dao.OwnerDao;
 import com.bpf.pojo.Owner;
 
+import java.util.List;
+
 public class OwnerDaoImpl extends BaseDao implements OwnerDao {
     @Override
     public int insertOwner(Owner owner) {
@@ -30,5 +32,11 @@ public class OwnerDaoImpl extends BaseDao implements OwnerDao {
         }
 
         return -1;
+    }
+
+    @Override
+    public List<Owner> queryAllOwner() {
+        String sql = "select id,mid,name from owner";
+        return queryForList(Owner.class, sql);
     }
 }
