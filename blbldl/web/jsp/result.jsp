@@ -150,8 +150,8 @@
         <p>课程信息</p>
         <table cellspacing="0">
             <tr>
-                <th>课程代码</th>
-                <th>${sessionScope.course.bvId}</th>
+                <td>课程代码</td>
+                <td>${sessionScope.course.bvId}</td>
             </tr>
             <tr>
                 <td>课程标题</td>
@@ -191,12 +191,12 @@
             <input type="hidden" name="action" value="downloadPages">
             <table>
                 <tr>
-                    <th></th>
-                    <th>集数</th>
-                    <th>标题</th>
-                    <th>时长</th>
-                    <th>质量</th>
-                    <th>链接</th>
+                    <td></td>
+                    <td>集数</td>
+                    <td>标题</td>
+                    <td>时长</td>
+                    <td>质量</td>
+                    <td>链接</td>
                 </tr>
                 <c:forEach items="${sessionScope.course.pages}" var="page">
                     <tr>

@@ -142,10 +142,10 @@
     <c:if test="${empty ownerList && not empty courseList}">
         <table>
             <tr>
-                <th>序号</th>
-                <th>标题</th>
-                <th>集数</th>
-                <th>作者</th>
+                <td>序号</td>
+                <td>标题</td>
+                <td>集数</td>
+                <td>作者</td>
             </tr>
             <c:forEach items="${courseList}" var="course" varStatus="num">
                 <tr>
@@ -160,8 +160,8 @@
     <c:if test="${not empty ownerList}">
         <table>
             <tr>
-                <th>序号</th>
-                <th>昵称</th>
+                <td>序号</td>
+                <td>昵称</td>
             </tr>
             <c:forEach items="${ownerList}" var="owner" varStatus="num">
                 <tr>
