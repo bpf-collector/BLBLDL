@@ -2,13 +2,15 @@ package com.bpf.service;
 
 import com.bpf.pojo.Owner;
 
+import java.util.List;
+
 public interface OwnerService {
 
     int insertOwner(Owner owner);
 
-    Owner getOwnerByMid(String mid);
+    Owner selectOwnerByMid(String mid);
 
-    Owner getOwnerById(int id);
+    List<Owner> selectAllOwner();
 
-
+    Owner selectOwnerById(Integer id);
 }

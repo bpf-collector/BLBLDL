@@ -1,24 +1,16 @@
 package com.bpf.service;
 
-import com.bpf.pojo.Course;
-import com.bpf.pojo.FileName;
-import com.bpf.pojo.Page;
-import net.sf.json.JSONObject;
+import com.bpf.pojo.PageWithBLOBs;
 
 import java.util.List;
-import java.util.Map;
 
 public interface PageService {
 
-    JSONObject getPageInfo(String bvId, String cid);
+    int insertPage(PageWithBLOBs page);
 
-    int insertPage(Page page);
+    PageWithBLOBs selectPageByCid(String cid);
 
-    Map<String, Object> getPageInfoMap(String bvId, String aId, int pageNo);
+    List<PageWithBLOBs> selectPagesByBvid(String bvid);
 
-    List<FileName> getFileNameByPageNo(Course course,
-        int[] pageNo, String tmpPath, String outPath, int sleep);
-
-    String getCidByBvIdAndPageNo(String bvId, String aid, int pageNo);
-
+    PageWithBLOBs selectPageByBvidAndPageno(String bvid, Integer pageno);
 }

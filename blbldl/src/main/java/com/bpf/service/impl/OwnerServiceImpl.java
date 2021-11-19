@@ -1,26 +1,41 @@
 package com.bpf.service.impl;
 
-import com.bpf.dao.OwnerDao;
-import com.bpf.dao.impl.OwnerDaoImpl;
+import com.bpf.mapper.OwnerMapper;
 import com.bpf.pojo.Owner;
+import com.bpf.pojo.OwnerExample;
 import com.bpf.service.OwnerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public class OwnerServiceImpl implements OwnerService {
 
-    private OwnerDao ownerDao = new OwnerDaoImpl();
+    @Autowired
+    private OwnerMapper ownerMapper;
+
 
     @Override
     public int insertOwner(Owner owner) {
-        return ownerDao.insertOwner(owner);
+        return ownerMapper.insertSelective(owner);
     }
 
     @Override
-    public Owner getOwnerByMid(String mid) {
-        return ownerDao.queryOwnerByMid(mid);
+    public Owner selectOwnerByMid(String mid) {
+        OwnerExample example = new OwnerExample();
+        example.createCriteria().andMidEqualTo(mid);
+        List<Owner> owners = ownerMapper.selectByExample(example);
+        return owners.get(0);
     }
 
     @Override
-    public Owner getOwnerById(int id) {
-        return ownerDao.queryOwnerById(id);
+    public List<Owner> selectAllOwner() {
+        return ownerMapper.selectByExample(new OwnerExample());
+    }
+
+    @Override
+    public Owner selectOwnerById(Integer id) {
+        return ownerMapper.selectByPrimaryKey(id);
     }
 }
