@@ -99,6 +99,11 @@ public class CourseServlet extends BaseServlet {
 
         int[] pageNos = Arrays.stream(downloads).mapToInt(Integer::parseInt).toArray();
         Course course = (Course) req.getSession().getAttribute("course");
+
+        String bvId = ((Course) req.getSession().getAttribute("course")).getBvId();
+
+        courseService.updateCourse(bvId, pageNos);
+
         List<FileName> fileNameList = pageService.getFileNameByPageNo(course, pageNos, tmpPath, outPath, 5000);
 
         queue.addReadyList(fileNameList);

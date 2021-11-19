@@ -1,8 +1,14 @@
 package com.bpf.utils;
 
+import sun.rmi.runtime.Log;
+
+import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -43,12 +49,23 @@ public class WebUtil {
         if (url == null || url.trim().length() == 0) {
             throw new NullPointerException("[WebUtil.connectURL] url is empty.");
         }
-        if (refererUrl == null || refererUrl.trim().length() == 0) {
-            throw new RuntimeException("[WebUtil.connectURL] videoUrl is empty.");
-        }
+        // if (refererUrl == null || refererUrl.trim().length() == 0) {
+        //     throw new RuntimeException("[WebUtil.connectURL] videoUrl is empty.");
+        // }
+        refererUrl = "https://player.bilibili.com/";
         URL url_ = new URL(url);
 
-        HttpURLConnection conn = (HttpURLConnection) url_.openConnection();
+        trustAllHosts();
+        HttpURLConnection conn = null;
+
+        if (url_.getProtocol().toLowerCase().equals("https")) {
+            HttpsURLConnection https = (HttpsURLConnection) url_.openConnection();
+            https.setHostnameVerifier(DO_NOT_VERIFY);
+            conn = https;
+        } else {
+            conn = (HttpURLConnection) url_.openConnection();
+        }
+
         conn.setRequestMethod("GET");
         conn.setRequestProperty("accept", "*/*");
         conn.setRequestProperty("accept-language", "en-US,en;q=0.5");
@@ -58,7 +75,45 @@ public class WebUtil {
         conn.setRequestProperty("user-agent", getUserAgent());
         conn.setRequestProperty("referer", refererUrl);
 
+
+
         return new BufferedInputStream(conn.getInputStream());
+    }
+
+    final static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
+        @Override
+        public boolean verify(String s, SSLSession sslSession) {
+            return true;
+        }
+    };
+
+    private static void trustAllHosts() {
+        final String TAG = "trustAllHosts";
+        TrustManager[] trustManagers = new TrustManager[] {
+                new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                        return;
+                    }
+
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                        return;
+                    }
+
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[] {};
+                    }
+                }
+        };
+        try {
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, trustManagers, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static boolean downloadFile(String url, String outPath, String refererUrl) {

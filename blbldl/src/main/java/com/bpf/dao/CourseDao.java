@@ -20,4 +20,6 @@ public interface CourseDao {
     List<Course> queryAllCourse();
 
     List<Course> queryCourseLikeTitle(String title);
+
+    String queryAIdByBvId(String bvId);
 }

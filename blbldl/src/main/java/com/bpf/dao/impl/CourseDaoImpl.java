@@ -49,4 +49,10 @@ public class CourseDaoImpl extends BaseDao implements CourseDao {
         String sql = "select aid,bvId,title,videos,intro,ownerId,saved from course where title like ?";
         return queryForList(Course.class, sql, "%"+title+"%");
     }
+
+    @Override
+    public String queryAIdByBvId(String bvId) {
+        String sql = "select aid from course where bvId = ?";
+        return queryForOne(String.class, sql, bvId);
+    }
 }

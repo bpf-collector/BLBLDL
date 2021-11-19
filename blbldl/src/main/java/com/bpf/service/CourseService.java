@@ -12,4 +12,8 @@ public interface CourseService {
     Course getCourseByBvId(String bvId);
 
     boolean isAllSaved(String bvId);
+
+    void updateCourse(String url, int[] pageNo);
+
+    String getAIdByBvId(String bvId);
 }

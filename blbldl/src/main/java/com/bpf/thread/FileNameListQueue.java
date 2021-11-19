@@ -129,6 +129,11 @@ public class FileNameListQueue {
 
         while (!WebUtil.downloadFile(fileName.getVideoUrl(), fileName.getVideoPath(), fileName.getSourceUrl())) {
             count++;
+            try {
+                Thread.sleep(800);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             if (count == MAX_COUNT) {
                 break;
             }
@@ -138,6 +143,11 @@ public class FileNameListQueue {
         count = 0;
         while (!WebUtil.downloadFile(fileName.getAudioUrl(), fileName.getAudioPath(), fileName.getSourceUrl())) {
             count++;
+            try {
+                Thread.sleep(800);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             if (count == MAX_COUNT) {
                 break;
             }

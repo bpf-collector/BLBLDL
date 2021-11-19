@@ -12,8 +12,12 @@ import net.sf.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ConnectException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,30 +29,40 @@ public class PageServiceImpl implements PageService {
     private PageDao pageDao = new PageDaoImpl();
 
     @Override
-    public JSONObject getPageInfo(String url) {
-        String data = null;
+    public JSONObject getPageInfo(String bvId, String cid) {
+        String urls = "http://api.bilibili.com/x/player/playurl?bvid=" + bvId + "&cid=" + cid + "&qn=80&fnval=16";
+
+        BufferedReader br = null;
+        StringBuilder builder = new StringBuilder();
         try {
-            Document doc = Jsoup.connect(url).get();
-            String html = doc.head().html();
-            String patt1 = "window.__playinfo__=";
-            String patt2 = "window.__INITIAL_STATE__=";
-            int start = html.indexOf(patt1);
-            int end = html.indexOf(patt2);
-            data = html.substring(start + patt1.length(), end);
-            data = data.replace("<script>", "").replace("</script>", "").trim();
+            URL url = new URL(urls);
+            URLConnection connection = url.openConnection();
+            br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String str = null;
+            while ((str = br.readLine()) != null) {
+                builder.append(str);
+            }
         } catch (ConnectException e) {
             System.out.println("[PageServiceImpl] getPageInfo 重新连接中...");
             try {
-                Thread.sleep(1500);
+                Thread.sleep(1000);
             } catch (InterruptedException interruptedException) {
                 interruptedException.printStackTrace();
             }
-            getPageInfo(url);
+            getPageInfo(bvId, cid);
         } catch (IOException e) {
-            // e.printStackTrace();
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return JSONObject.fromObject(data);
+
+        return JSONObject.fromObject(builder.toString());
     }
 
     @Override
@@ -57,21 +71,11 @@ public class PageServiceImpl implements PageService {
     }
 
     @Override
-    public Map<String, Object> getPageInfoMap(String url) {
-        JSONObject pageInfo = null;
-        try {
-            pageInfo = getPageInfo(url);
-        } catch (Exception e) {
-            // e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        Map<String, Object> map = new HashMap<>();
+    public Map<String, Object> getPageInfoMap(String bvId, String aId, int pageNo) {
+        String cid = getCidByBvIdAndPageNo(bvId, aId, pageNo);
+        JSONObject pageInfo = getPageInfo(bvId, cid);
 
-        int pageNo = 1;
-        if (url.contains("p=")) {
-            pageNo = Integer.parseInt(url.split("p=")[1]);
-        }
-        String bvId = url.split("\\?")[0].split("/")[url.split("/").length-1];
+        Map<String, Object> map = new HashMap<>();
 
         JSONObject data = pageInfo.getJSONObject("data");
         JSONObject dash = data.getJSONObject("dash");
@@ -83,8 +87,8 @@ public class PageServiceImpl implements PageService {
         map.put("duration", dash.get("duration"));
         map.put("width", video.get("width"));
         map.put("height", video.get("height"));
-        map.put("videoUrl", video.getJSONArray("backupUrl").get(0));
-        map.put("audioUrl", dash.getJSONArray("audio").getJSONObject(0).getJSONArray("backupUrl").get(0));
+        map.put("videoUrl", video.getJSONArray("baseUrl").get(0));
+        map.put("audioUrl", dash.getJSONArray("audio").getJSONObject(0).getJSONArray("baseUrl").get(0));
 
         return map;
     }
@@ -107,5 +111,54 @@ public class PageServiceImpl implements PageService {
         }
 
         return fileNames;
+    }
+
+    @Override
+    public String getCidByBvIdAndPageNo(String bvId, String aid, int pageNo) {
+        String cid = sqlGetCidByBvIdAndPageNo(bvId, pageNo);
+        if (cid == null || "null".equals(cid) || cid.isEmpty()) {
+            cid = httpGetCidByBvIdAndPageNo(aid, pageNo);
+        }
+
+        return cid;
+    }
+
+    public String sqlGetCidByBvIdAndPageNo(String bvId, int pageNo) {
+        return pageDao.queryCidByBvIdAndPageNo(bvId, pageNo);
+    }
+
+    public String httpGetCidByBvIdAndPageNo(String aId, int pageNo) {
+        String urls = "http://api.bilibili.cn/view?id=" + aId + "&page=" + pageNo + "&appkey=ba02c181c8820321";
+
+        BufferedReader br = null;
+        StringBuilder builder = new StringBuilder();
+        try {
+            URL url = new URL(urls);
+            URLConnection connection = url.openConnection();
+            br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String str = null;
+            while ((str = br.readLine()) != null) {
+                builder.append(str);
+            }
+        } catch (ConnectException e) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+            httpGetCidByBvIdAndPageNo(aId, pageNo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return (String) JSONObject.fromObject(builder.toString()).get("cid");
     }
 }

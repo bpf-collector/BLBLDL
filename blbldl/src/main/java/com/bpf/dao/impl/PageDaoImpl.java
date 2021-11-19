@@ -42,4 +42,12 @@ public class PageDaoImpl extends BaseDao implements PageDao {
 
         return map;
     }
+
+    @Override
+    public String queryCidByBvIdAndPageNo(String bvId, int pageNo) {
+        String sql = "select cid from page where bvId = ? and pageNo = ?";
+        Object value = queryForValue(sql, bvId, pageNo);
+
+        return String.valueOf(value);
+    }
 }

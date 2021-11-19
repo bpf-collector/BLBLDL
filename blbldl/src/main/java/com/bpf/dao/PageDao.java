@@ -13,4 +13,6 @@ public interface PageDao {
     Page queryPageByCid(String cid);
 
     Map<String, String> queryUrlsByBvIdAndPageNo(String bvId, int pageNo);
+
+    String queryCidByBvIdAndPageNo(String bvId, int pageNo);
 }

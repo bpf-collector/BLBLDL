@@ -12,18 +12,24 @@ public class CourseServiceTest {
 
     @Test
     public void getCourseInfo() {
-        String url = "https://www.bilibili.com/video/BV1eJ411c7rf";
-        JSONObject courseInfo = courseService.getCourseInfo(url);
+        String bvId = "BV1eJ411c7rf";
+        bvId = "BV1B7411L7tE";
+        JSONObject courseInfo = courseService.getCourseInfo(bvId);
 
-        JSONObject videoData = courseInfo.getJSONObject("videoData");
-        JSONObject owner = videoData.getJSONObject("owner");
-        JSONArray pages = videoData.getJSONArray("pages");
+        if(courseInfo == null) {
+            System.out.println("数据为空...");
+            return;
+        }
+
+        JSONObject data = courseInfo.getJSONObject("data");
+        JSONObject owner = data.getJSONObject("owner");
+        JSONArray pages = data.getJSONArray("pages");
         JSONObject page_1 = pages.getJSONObject(0);
 
-        System.out.println("aid: " + videoData.get("aid"));
-        System.out.println("bvid: " + videoData.get("bvid"));
-        System.out.println("videos: " + videoData.get("videos"));
-        System.out.println("title: " + videoData.get("title"));
+        System.out.println("aid: " + data.get("aid"));
+        System.out.println("bvid: " + data.get("bvid"));
+        System.out.println("videos: " + data.get("videos"));
+        System.out.println("title: " + data.get("title"));
 
         System.out.println("owner: " + owner.get("mid") + ", " + owner.get("name"));
 
@@ -38,6 +44,7 @@ public class CourseServiceTest {
     @Test
     public void insertCourse() {
         String url = "https://www.bilibili.com/video/BV1eJ411c7rf?p=2";
+        url = "https://www.bilibili.com/video/BV1B7411L7tE?p=2";
         courseService.insertCourse(url);
     }
 
