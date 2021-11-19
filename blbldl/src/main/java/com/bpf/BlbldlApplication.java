@@ -6,10 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("com.bpf.mapper")
-public class BlbldlDemoApplication {
+public class BlbldlApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BlbldlDemoApplication.class, args);
+		SpringApplication.run(BlbldlApplication.class, args);
 	}
-
 }
